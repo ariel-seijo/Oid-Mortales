@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Link from "next/link";
 import ScrollReveal from "@/components/scroll-reveal";
 import { PATH_CARDS } from "@/lib/constants";
 
@@ -148,20 +149,24 @@ export default function PathSelectionSection() {
         </ul>
 
         <ScrollReveal delay={0.3} className="mt-10 text-center">
-          <button
-            className={`inline-flex h-12 items-center justify-center rounded-lg px-8 text-sm font-semibold transition-all duration-300 sm:h-14 sm:px-10 sm:text-base ${
-              selected
-                ? "bg-navy text-cream hover:bg-navy-light hover:shadow-lg"
-                : "cursor-default bg-navy/10 text-navy/40"
-            }`}
-            disabled={!selected}
-            aria-disabled={!selected}
-            aria-label={selected ? "Iniciar test de inglés" : "Seleccioná un camino de aprendizaje para continuar"}
-          >
-            <span aria-live="polite">
-              {selected ? "Iniciar test" : "Seleccioná tu camino"}
+          {selected ? (
+            <Link
+              href={`/test/${selected}`}
+              className="inline-flex h-12 items-center justify-center rounded-lg bg-navy px-8 text-sm font-semibold text-cream transition-all duration-300 hover:bg-navy-light hover:shadow-lg sm:h-14 sm:px-10 sm:text-base"
+              aria-label="Iniciar test de inglés"
+            >
+              Iniciar test
+            </Link>
+          ) : (
+            <span
+              className="inline-flex h-12 items-center justify-center rounded-lg px-8 text-sm font-semibold text-navy/40 sm:h-14 sm:px-10 sm:text-base"
+              role="button"
+              aria-disabled="true"
+              aria-label="Seleccioná un camino de aprendizaje para continuar"
+            >
+              Seleccioná tu camino
             </span>
-          </button>
+          )}
         </ScrollReveal>
       </div>
     </section>
