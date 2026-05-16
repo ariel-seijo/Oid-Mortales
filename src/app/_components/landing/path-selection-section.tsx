@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
-import ScrollReveal from "@/components/scroll-reveal";
+import ScrollReveal from "@/components/ui/scroll-reveal";
 import { PATH_CARDS } from "@/lib/constants";
 
 const COLOR_MAP: Record<string, { border: string; bg: string; badge: string; text: string; ring: string }> = {

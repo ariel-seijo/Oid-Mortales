@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import type { QuestionTip } from "@/lib/test-data";
+import type { QuestionTip } from "@/lib/types";
 
 interface TestTipCardProps {
   tip: QuestionTip | null;

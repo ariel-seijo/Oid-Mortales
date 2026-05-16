@@ -1,4 +1,4 @@
-import ScrollReveal from "@/components/scroll-reveal";
+import ScrollReveal from "@/components/ui/scroll-reveal";
 import { METHODOLOGY_CARDS } from "@/lib/constants";
 
 const ICONS: Record<string, React.ReactNode> = {

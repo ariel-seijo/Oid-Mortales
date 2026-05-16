@@ -1,4 +1,4 @@
-import ScrollReveal from "@/components/scroll-reveal";
+import ScrollReveal from "@/components/ui/scroll-reveal";
 
 export default function AboutSection() {
   return (

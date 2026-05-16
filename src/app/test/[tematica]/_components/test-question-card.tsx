@@ -1,17 +1,22 @@
 "use client";
 
-import type { Question } from "@/lib/test-data";
-
-const OPTION_LABELS = ["A", "B", "C", "D"] as const;
-
 interface TestQuestionCardProps {
-  question: Question;
+  question: {
+    categoryContext: string;
+    grammarTopic: string;
+    sentence: string;
+    instruction: string;
+    options: [string, string, string, string];
+    correctIndex: number;
+  };
   selectedOptionIndex: number | null;
   isAnswered: boolean;
   onSelectOption: (index: number) => void;
   onAction: () => void;
   actionLabel: string;
 }
+
+const OPTION_LABELS = ["A", "B", "C", "D"] as const;
 
 export default function TestQuestionCard({
   question,
@@ -100,14 +105,27 @@ export default function TestQuestionCard({
                 className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold transition-all duration-200 sm:h-8 sm:w-8 sm:text-sm ${labelClass}`}
               >
                 {isAnswered && isCorrect ? (
-                  <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg
+                    className="h-3.5 w-3.5 sm:h-4 sm:w-4"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M3 8l3.5 3.5L13 5"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 ) : (
                   optionLabel
                 )}
               </span>
-              <span className={`pt-0.5 text-sm leading-snug transition-colors duration-200 sm:text-base sm:pt-0 ${textClass}`}>
+              <span
+                className={`pt-0.5 text-sm leading-snug transition-colors duration-200 sm:text-base sm:pt-0 ${textClass}`}
+              >
                 {option}
               </span>
             </button>
