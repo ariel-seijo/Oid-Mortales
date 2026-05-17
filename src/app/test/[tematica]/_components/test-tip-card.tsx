@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import type { QuestionTip } from "@/lib/test-data";
+import type { QuestionTip } from "@/lib/types";
 
 interface TestTipCardProps {
   tip: QuestionTip | null;
@@ -65,12 +65,27 @@ export default function TestTipCard({ tip }: TestTipCardProps) {
             transition={{ duration: 0.35, ease: "easeOut" }}
             className="space-y-2.5 overflow-hidden"
           >
-            <h3 className="text-sm font-semibold text-navy/80 sm:text-base">
-              {tip.title}
-            </h3>
-            <p className="text-sm leading-relaxed text-navy/60 sm:text-base">
-              {tip.explanation}
-            </p>
+            <div>
+              <h3 className="text-sm font-semibold text-navy/80 sm:text-base">
+                {tip.title}
+              </h3>
+              <p className="text-sm leading-relaxed text-navy/60 sm:text-base">
+                {tip.explanation}
+              </p>
+            </div>
+            {tip.titleEs && (
+              <>
+                <div className="border-t border-navy/8" />
+                <div>
+                  <h3 className="text-sm font-semibold text-blue-accent/70 sm:text-base">
+                    {tip.titleEs}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-blue-accent/50 sm:text-base">
+                    {tip.explanationEs}
+                  </p>
+                </div>
+              </>
+            )}
           </motion.div>
         ) : (
           <motion.p

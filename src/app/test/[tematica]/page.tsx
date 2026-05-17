@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { PATH_CARDS } from "@/lib/constants";
-import { getTematicaName } from "@/lib/test-data";
-import TestContent from "@/components/test-content";
+import { getTematicaName } from "./_lib";
+import TestContent from "./_components/test-content";
 
 interface TestPageProps {
   params: Promise<{ tematica: string }>;

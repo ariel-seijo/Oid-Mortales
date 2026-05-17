@@ -1,11 +1,9 @@
 "use client";
 
-import type { Question } from "@/lib/test-data";
+import type { MultipleChoiceExercise } from "@/lib/types";
 
-const OPTION_LABELS = ["A", "B", "C", "D"] as const;
-
-interface TestQuestionCardProps {
-  question: Question;
+interface MultipleChoiceCardProps {
+  exercise: MultipleChoiceExercise;
   selectedOptionIndex: number | null;
   isAnswered: boolean;
   onSelectOption: (index: number) => void;
@@ -13,48 +11,54 @@ interface TestQuestionCardProps {
   actionLabel: string;
 }
 
-export default function TestQuestionCard({
-  question,
+const OPTION_LABELS = ["A", "B", "C", "D"] as const;
+
+export default function MultipleChoiceCard({
+  exercise,
   selectedOptionIndex,
   isAnswered,
   onSelectOption,
   onAction,
   actionLabel,
-}: TestQuestionCardProps) {
+}: MultipleChoiceCardProps) {
   const canVerify = selectedOptionIndex !== null && !isAnswered;
   const canAdvance = isAnswered;
 
   return (
     <article
       className="rounded-2xl border border-navy/8 bg-cream p-5 sm:p-6 lg:p-8"
-      aria-label={`Pregunta de ${question.grammarTopic}`}
+      aria-label={`Pregunta de ${exercise.grammarTopic}`}
     >
       <div className="mb-5 flex flex-wrap items-center gap-2">
         <span className="rounded-full bg-navy/6 px-2.5 py-1 text-xs font-semibold text-navy/60">
-          {question.categoryContext}
+          {exercise.categoryContext}
         </span>
         <span className="rounded-full bg-blue-accent/10 px-2.5 py-1 text-xs font-semibold text-blue-accent">
-          {question.grammarTopic}
+          {exercise.grammarTopic}
+        </span>
+        <span className="rounded-full bg-navy/8 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-navy/40">
+          Opción múltiple
         </span>
       </div>
 
       <blockquote className="relative mb-5 border-l-[3px] border-navy/15 py-1 pl-4 sm:pl-5">
         <p className="font-serif text-lg leading-relaxed text-navy sm:text-xl lg:text-2xl">
-          {question.sentence}
+          {exercise.sentence}
         </p>
       </blockquote>
 
       <p className="mb-6 text-sm font-medium text-navy/50 sm:text-base">
-        {question.instruction}
+        {exercise.instruction}
       </p>
 
       <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {question.options.map((option, index) => {
+        {exercise.options.map((option, index) => {
           const isSelected = selectedOptionIndex === index;
-          const isCorrect = index === question.correctIndex;
+          const isCorrect = index === exercise.correctIndex;
           const optionLabel = OPTION_LABELS[index];
 
-          let borderClass = "border-navy/8 bg-white hover:border-navy/20 hover:bg-navy/2";
+          let borderClass =
+            "border-navy/8 bg-white hover:border-navy/20 hover:bg-navy/2";
           let labelClass = "bg-navy/6 text-navy/50";
           let textClass = "text-navy";
 
@@ -66,7 +70,8 @@ export default function TestQuestionCard({
             } else if (isSelected && !isCorrect) {
               borderClass = "border-rose-300 bg-rose-50/70";
               labelClass = "bg-rose-400 text-white";
-              textClass = "text-rose-600 line-through decoration-rose-400/60 decoration-2";
+              textClass =
+                "text-rose-600 line-through decoration-rose-400/60 decoration-2";
             } else {
               borderClass = "border-navy/5 bg-navy/1";
               labelClass = "bg-navy/5 text-navy/25";
@@ -93,21 +98,36 @@ export default function TestQuestionCard({
                 }
               }}
               className={`group flex w-full items-start gap-3 rounded-xl border-2 p-3.5 text-left transition-all duration-200 sm:p-4 ${borderClass} ${
-                isAnswered ? "cursor-default" : "cursor-pointer active:scale-[0.98]"
+                isAnswered
+                  ? "cursor-default"
+                  : "cursor-pointer active:scale-[0.98]"
               }`}
             >
               <span
                 className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold transition-all duration-200 sm:h-8 sm:w-8 sm:text-sm ${labelClass}`}
               >
                 {isAnswered && isCorrect ? (
-                  <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg
+                    className="h-3.5 w-3.5 sm:h-4 sm:w-4"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M3 8l3.5 3.5L13 5"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 ) : (
                   optionLabel
                 )}
               </span>
-              <span className={`pt-0.5 text-sm leading-snug transition-colors duration-200 sm:text-base sm:pt-0 ${textClass}`}>
+              <span
+                className={`pt-0.5 text-sm leading-snug transition-colors duration-200 sm:text-base sm:pt-0 ${textClass}`}
+              >
                 {option}
               </span>
             </button>
