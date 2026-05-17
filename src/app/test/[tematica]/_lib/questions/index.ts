@@ -1,10 +1,10 @@
-import { videojuegosQuestions } from "./videojuegos";
-import { animeQuestions } from "./anime";
-import { historiaQuestions } from "./historia";
-import type { Question } from "@/lib/types";
+import { videojuegosExercises } from "./videojuegos";
+import { animeExercises } from "./anime";
+import { historiaExercises } from "./historia";
+import type { Exercise } from "@/lib/types";
 
-export const ALL_QUESTIONS: Question[] = [
-  ...videojuegosQuestions,
-  ...animeQuestions,
-  ...historiaQuestions,
+export const ALL_EXERCISES: Exercise[] = [
+  ...videojuegosExercises,
+  ...animeExercises,
+  ...historiaExercises,
 ];

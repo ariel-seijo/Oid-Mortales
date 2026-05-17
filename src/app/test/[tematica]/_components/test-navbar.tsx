@@ -121,7 +121,7 @@ export default function TestNavbar({
             Regresar al inicio
           </Link>
           <span className="text-xs font-medium text-navy/40 sm:text-sm">
-            ~15 min
+            ~25 min
           </span>
         </div>
 
@@ -130,7 +130,7 @@ export default function TestNavbar({
             Test de inglés
           </h1>
           <span className="text-xs font-medium tabular-nums text-navy/50 sm:text-sm">
-            Pregunta {currentIndex + 1} de {totalQuestions}
+            Ejercicio {currentIndex + 1} de {totalQuestions}
           </span>
         </div>
 

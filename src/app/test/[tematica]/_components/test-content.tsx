@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import TestNavbar from "./test-navbar";
-import TestQuestionCard from "./test-question-card";
+import ExerciseRouter from "./exercise-router";
 import TestTipCard from "./test-tip-card";
 import CompletedView from "./completed-view";
 import { useTestEngine } from "../_hooks/use-test-engine";
@@ -14,15 +14,20 @@ interface TestContentProps {
 
 export default function TestContent({ tematica }: TestContentProps) {
   const {
-    questions,
-    currentIndex,
+    exercises,
+    levelIndex,
+    exerciseIndexInLevel,
+    totalExercises,
+    currentLevel,
     selectedOptionIndex,
+    userWordOrder,
     isAnswered,
     isCompleted,
-    question,
+    exercise,
     tematicaName,
     actionLabel,
     handleSelectOption,
+    handleSetWordOrder,
     handleAction,
   } = useTestEngine(tematica);
 
@@ -45,11 +50,15 @@ export default function TestContent({ tematica }: TestContentProps) {
     return () => observer.disconnect();
   }, []);
 
-  if (questions.length === 0) {
+  const flatIndex =
+    Math.min(levelIndex, 5) * 4 +
+    Math.min(exerciseIndexInLevel, 3);
+
+  if (exercises.length === 0) {
     return (
       <div className="flex min-h-screen items-center justify-center px-5">
         <p className="text-navy/50">
-          No hay preguntas disponibles para esta temática.
+          No hay ejercicios disponibles para esta temática.
         </p>
       </div>
     );
@@ -60,9 +69,9 @@ export default function TestContent({ tematica }: TestContentProps) {
       <TestNavbar
         ref={navbarRef}
         tematicaName={tematicaName}
-        currentIndex={isCompleted ? questions.length : currentIndex}
-        totalQuestions={questions.length}
-        difficulty={question.difficulty}
+        currentIndex={isCompleted ? totalExercises : flatIndex}
+        totalQuestions={totalExercises}
+        difficulty={currentLevel}
       />
 
       <main
@@ -79,7 +88,7 @@ export default function TestContent({ tematica }: TestContentProps) {
             <CompletedView key="completed" tematicaName={tematicaName} />
           ) : (
             <motion.div
-              key={currentIndex}
+              key={`${levelIndex}-${exerciseIndexInLevel}`}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
@@ -87,18 +96,22 @@ export default function TestContent({ tematica }: TestContentProps) {
               className="flex flex-col gap-5 lg:flex-row lg:gap-8"
             >
               <div className="flex-1">
-                <TestQuestionCard
-                  question={question}
+                <ExerciseRouter
+                  exercise={exercise}
                   selectedOptionIndex={selectedOptionIndex}
+                  userWordOrder={userWordOrder}
                   isAnswered={isAnswered}
                   onSelectOption={handleSelectOption}
+                  onSetWordOrder={handleSetWordOrder}
                   onAction={handleAction}
                   actionLabel={actionLabel}
                 />
               </div>
 
               <div className="lg:w-80 xl:w-96">
-                <TestTipCard tip={isAnswered ? question.tip : null} />
+                <TestTipCard
+                  tip={isAnswered && exercise ? exercise.tip : null}
+                />
               </div>
             </motion.div>
           )}

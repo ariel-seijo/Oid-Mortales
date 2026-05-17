@@ -49,7 +49,7 @@ export default function CompletedView({ tematicaName }: CompletedViewProps) {
           Test completado
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-navy/55 sm:text-base">
-          Has completado todas las preguntas de {tematicaName}.
+          Has completado todos los ejercicios de {tematicaName}.
         </p>
         <Link
           href="/"

@@ -1,40 +1,61 @@
+"use client";
+
 import { useState, useCallback, useMemo } from "react";
-import type { Question } from "@/lib/types";
-import { getQuestionsByTematica, getTematicaName } from "../_lib";
+import type { Exercise, Difficulty } from "@/lib/types";
+import { getExercisesGroupedByLevel, getTematicaName } from "../_lib";
+
+const LEVELS: Difficulty[] = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 interface UseTestEngineReturn {
-  questions: Question[];
-  currentIndex: number;
+  exercises: Exercise[];
+  levelIndex: number;
+  exerciseIndexInLevel: number;
+  totalExercises: number;
+  currentLevel: Difficulty;
   selectedOptionIndex: number | null;
+  userWordOrder: string[];
   isAnswered: boolean;
   isCompleted: boolean;
-  question: Question;
-  isLastQuestion: boolean;
+  exercise: Exercise;
   tematicaName: string;
   actionLabel: string;
   handleSelectOption: (index: number) => void;
+  handleSetWordOrder: (words: string[]) => void;
   handleAction: () => void;
-  handleNext: () => void;
-  handleComplete: () => void;
 }
 
 export function useTestEngine(tematica: string): UseTestEngineReturn {
-  const questions = useMemo(
-    () => getQuestionsByTematica(tematica),
+  const groupedExercises = useMemo(
+    () => getExercisesGroupedByLevel(tematica),
     [tematica],
   );
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const allExercises = useMemo(
+    () => groupedExercises.flat(),
+    [groupedExercises],
+  );
+
+  const [levelIndex, setLevelIndex] = useState(0);
+  const [exerciseIndexInLevel, setExerciseIndexInLevel] = useState(0);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(null);
+  const [userWordOrder, setUserWordOrderState] = useState<string[]>([]);
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  const question: Question = questions[currentIndex];
-  const isLastQuestion = currentIndex === questions.length - 1;
+  const levelGroup = groupedExercises[levelIndex] ?? [];
+  const exercise: Exercise = levelGroup[exerciseIndexInLevel];
+  const currentLevel = LEVELS[levelIndex];
   const tematicaName = getTematicaName(tematica);
 
+  const flatIndex =
+    groupedExercises
+      .slice(0, levelIndex)
+      .reduce((sum, g) => sum + g.length, 0) + exerciseIndexInLevel;
+
+  const totalExercises = allExercises.length;
+
   const actionLabel = isAnswered
-    ? isLastQuestion
+    ? flatIndex === totalExercises - 1
       ? "Finalizar test"
       : "Siguiente ejercicio"
     : "Verificar respuesta";
@@ -47,42 +68,77 @@ export function useTestEngine(tematica: string): UseTestEngineReturn {
     [isAnswered],
   );
 
-  const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => prev + 1);
-    setSelectedOptionIndex(null);
-    setIsAnswered(false);
-  }, []);
+  const handleSetWordOrder = useCallback(
+    (words: string[]) => {
+      if (isAnswered) return;
+      setUserWordOrderState(words);
+    },
+    [isAnswered],
+  );
 
-  const handleComplete = useCallback(() => {
-    setIsCompleted(true);
-  }, []);
+  const canVerify = (): boolean => {
+    if (!exercise) return false;
+    switch (exercise.type) {
+      case "multiple-choice":
+      case "reading-comprehension":
+      case "question-answer":
+        return selectedOptionIndex !== null;
+      case "word-order":
+        return (
+          userWordOrder.length === exercise.shuffledWords.length
+        );
+    }
+  };
 
   const handleAction = useCallback(() => {
     if (!isAnswered) {
-      if (selectedOptionIndex === null) return;
+      if (!canVerify()) return;
       setIsAnswered(true);
-    } else {
-      if (isLastQuestion) {
-        handleComplete();
-        return;
-      }
-      handleNext();
+      return;
     }
-  }, [isAnswered, selectedOptionIndex, isLastQuestion, handleComplete, handleNext]);
+
+    const isLastInLevel = exerciseIndexInLevel >= levelGroup.length - 1;
+    const isLastLevel = levelIndex >= groupedExercises.length - 1;
+
+    if (isLastInLevel && isLastLevel) {
+      setIsCompleted(true);
+      return;
+    }
+
+    if (isLastInLevel) {
+      setLevelIndex((prev) => prev + 1);
+      setExerciseIndexInLevel(0);
+    } else {
+      setExerciseIndexInLevel((prev) => prev + 1);
+    }
+
+    setSelectedOptionIndex(null);
+    setUserWordOrderState([]);
+    setIsAnswered(false);
+  }, [
+    isAnswered,
+    canVerify,
+    exerciseIndexInLevel,
+    levelGroup.length,
+    levelIndex,
+    groupedExercises.length,
+  ]);
 
   return {
-    questions,
-    currentIndex,
+    exercises: allExercises,
+    levelIndex,
+    exerciseIndexInLevel,
+    totalExercises,
+    currentLevel,
     selectedOptionIndex,
+    userWordOrder,
     isAnswered,
     isCompleted,
-    question,
-    isLastQuestion,
+    exercise,
     tematicaName,
     actionLabel,
     handleSelectOption,
+    handleSetWordOrder,
     handleAction,
-    handleNext,
-    handleComplete,
   };
 }
