@@ -6,7 +6,6 @@ export interface QuestionTip {
 }
 
 export type Difficulty = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
-export type Tematica = "historia" | "anime" | "videojuegos";
 export type ExerciseType =
   | "multiple-choice"
   | "word-order"
@@ -15,12 +14,12 @@ export type ExerciseType =
 
 interface ExerciseBase {
   id: string;
-  tematica: Tematica;
   difficulty: Difficulty;
-  categoryContext: string;
+  topic: string;
   grammarTopic: string;
   instruction: string;
   tip: QuestionTip;
+  translation?: string;
 }
 
 export interface MultipleChoiceExercise extends ExerciseBase {
@@ -59,16 +58,3 @@ export type Exercise =
   | ReadingComprehensionExercise
   | QuestionAnswerExercise;
 
-/** @deprecated Usar Exercise (discriminated union) en su lugar */
-export interface Question {
-  id: string;
-  tematica: Tematica;
-  difficulty: Difficulty;
-  categoryContext: string;
-  grammarTopic: string;
-  sentence: string;
-  instruction: string;
-  options: [string, string, string, string];
-  correctIndex: number;
-  tip: QuestionTip;
-}

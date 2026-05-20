@@ -1,20 +1,23 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-navy: #1B2A4A;
-  --color-navy-light: #2C3E6B;
-  --color-blue-accent: #5B7DB1;
-  --color-cream: #FAF7F2;
-  --color-cream-warm: #F5F0E8;
-  --color-cream-card: #FFFBEB;
-  --color-celeste: #87CEEB;
-  --color-celeste-dark: #5BA4CF;
-  --color-green-path: #4ADE80;
-  --color-green-path-dark: #22C55E;
-  --color-purple-path: #A78BFA;
-  --color-purple-path-dark: #7C3AED;
-  --color-muted: #6B7280;
-  --color-muted-light: #9CA3AF;
+  --color-primary: #1e618a;
+  --color-primary-hover: #2d7baa;
+  --color-primary-soft: rgba(30, 97, 138, 0.08);
+  --color-celeste: #70b5db;
+  --color-celeste-soft: rgba(112, 181, 219, 0.12);
+  --color-gold: #e1a812;
+  --color-gold-soft: #fff6d5;
+  --color-surface: #fdfdfc;
+  --color-surface-alt: #e3f0fa;
+  --color-surface-card: #ffffff;
+  --color-muted: #5b6d7c;
+  --color-muted-light: #8699a8;
+  --color-text-dark: #0d3b56;
+  --color-success: #10b981;
+  --color-success-soft: #d1fae5;
+  --color-error: #e11d48;
+  --color-error-soft: #ffe4e6;
   --font-serif: var(--font-literata);
   --font-sans: var(--font-inter);
 }
@@ -24,21 +27,21 @@
 }
 
 body {
-  background: var(--color-cream);
-  color: var(--color-navy);
+  background: var(--color-surface);
+  color: var(--color-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: rgba(91, 125, 177, 0.25);
+  background: rgba(112, 181, 219, 0.25);
 }
 
 /* Focus-visible ring for interactive elements */
 a:focus-visible,
 button:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid var(--color-navy-light);
+  outline: 2px solid var(--color-primary-hover);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -52,5 +55,28 @@ button:focus-visible,
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Comparison cards crossfade animations */
+@keyframes cmpFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cmpFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
   }
 }

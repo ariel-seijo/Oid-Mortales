@@ -32,12 +32,17 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # agent/config files
 AGENTS.md
 CLAUDE.md
 .agents/
 skills-lock.json
+
+# contenido propietario (datos reales de ejercicios y niveles)
+/src/app/test/_lib/questions/historia.ts
+/data/
 
 # vercel
 .vercel

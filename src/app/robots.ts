@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://two4one.vercel.app/sitemap.xml",
+    sitemap: "https://oid-mortales.vercel.app/sitemap.xml",
   };
 }

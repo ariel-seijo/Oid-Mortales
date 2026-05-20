@@ -14,31 +14,31 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-cream/90 backdrop-blur-md shadow-[0_1px_3px_rgba(27,42,74,0.06)]"
-          : "bg-transparent"
+          ? "bg-surface/80 backdrop-blur-[12px] shadow-[0_1px_3px_rgba(10,41,64,0.06)]"
+          : "bg-white"
       }`}
       role="banner"
     >
       <nav
-        className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-6 lg:px-8"
+        className="mx-auto flex items-center justify-between max-w-6xl px-5 py-4 sm:px-6 lg:px-8"
         aria-label="Navegación principal"
       >
         <a
           href="#"
-          className="font-serif text-xl font-bold tracking-tight text-navy sm:text-2xl"
-          aria-label="Two4One — Ir al inicio"
+          className="font-serif text-xl font-bold tracking-tight text-primary no-underline sm:text-2xl"
+          aria-label="Oíd Mortales — Ir al inicio"
         >
-          Two4One
+          Oíd Mortales
         </a>
 
-        <ul className="flex items-center gap-5 sm:gap-8" role="list">
+        <ul className="flex items-center gap-5 list-none m-0 p-0 sm:gap-8" role="list">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <a
                 href={link.href}
-                className="text-sm font-medium text-navy/70 transition-colors duration-200 hover:text-navy sm:text-base"
+                className="text-sm font-medium text-primary/70 no-underline transition-colors hover:text-primary sm:text-base"
               >
                 {link.label}
               </a>

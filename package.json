@@ -1,12 +1,13 @@
 {
-  "name": "two4one",
+  "name": "oid-mortales",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "node scripts/setup-content.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.38.0",
