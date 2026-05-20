@@ -43,7 +43,7 @@ function AnimatedProgress({
         aria-label={`Progreso del test: ${targetProgress}%`}
       >
         <div
-          className="h-full rounded-full bg-gradient-to-r from-celeste via-white/95 via-[31%] via-white/95 via-[46.5%] via-gold via-[50%] via-white/95 via-[53.5%] via-white/95 via-[69%] to-celeste transition-[width] duration-500 ease-out shadow-[0_0_6px_rgba(112,181,219,0.4)]"
+          className="h-full rounded-full bg-[linear-gradient(to_right,var(--color-celeste)_0%,rgba(255,255,255,0.95)_31%,rgba(255,255,255,0.95)_46.5%,var(--color-gold)_50%,rgba(255,255,255,0.95)_53.5%,rgba(255,255,255,0.95)_69%,var(--color-celeste)_100%)] transition-[width] duration-500 ease-out shadow-[0_0_6px_rgba(112,181,219,0.4)]"
           style={{ width: `${targetProgress}%` }}
         />
       </div>
