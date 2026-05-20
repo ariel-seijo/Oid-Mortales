@@ -19,6 +19,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
   title: "Oíd Mortales | Plataforma de Nivelación de Inglés",
   description:
     "Transforma tu pasión en dominio del inglés. Una metodología innovadora que conecta tus intereses personales con el aprendizaje estructurado del idioma.",
