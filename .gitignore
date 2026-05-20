@@ -41,7 +41,6 @@ CLAUDE.md
 skills-lock.json
 
 # contenido propietario (datos reales de ejercicios y niveles)
-/src/app/test/_lib/questions/historia.ts
 /data/
 
 # vercel
