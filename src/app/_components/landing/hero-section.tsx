@@ -5,7 +5,7 @@ import { PrimaryCTA, SecondaryCTA } from "@/components/ui/primary-cta";
 export default function HeroSection() {
   return (
     <section
-      className="relative flex flex-col items-center justify-center h-screen pt-24 pb-16 px-5 text-center bg-white bg-[radial-gradient(circle,rgba(255,255,255,1)_0%,rgba(38,154,217,0.56)_100%)] sm:px-6 lg:px-8"
+      className="relative flex flex-col items-center justify-center min-h-[100svh] pt-[var(--navbar-height)] pb-16 px-5 text-center bg-white bg-[radial-gradient(circle,rgba(255,255,255,1)_0%,rgba(38,154,217,0.56)_100%)] sm:px-6 lg:px-8"
       aria-labelledby="hero-heading"
     >
       <div className="mx-auto max-w-3xl">

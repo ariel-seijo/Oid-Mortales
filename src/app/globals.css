@@ -26,6 +26,10 @@
   scroll-behavior: smooth;
 }
 
+:root {
+  --navbar-height: 60px;
+}
+
 body {
   background: var(--color-surface);
   color: var(--color-primary);
