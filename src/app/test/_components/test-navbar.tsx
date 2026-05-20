@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useAnimatedCounter } from "@/hooks/use-animated-counter";
 
 const DIFFICULTY_CLASSES: Record<string, string> = {
   A1: "bg-gradient-to-br from-success-soft to-[#a7f3d0] text-[#047857] shadow-[0_1px_3px_rgba(52,211,153,0.12)]",
@@ -27,32 +27,10 @@ function AnimatedProgress({
   totalQuestions: number;
 }) {
   const targetProgress = Math.round(((currentIndex + 1) / totalQuestions) * 100);
-  const [displayProgress, setDisplayProgress] = useState(0);
-  const rafRef = useRef<number>(0);
-
-  useEffect(() => {
-    let start: number | null = null;
-    const startValue = displayProgress;
-    const duration = 500;
-
-    const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(startValue + (targetProgress - startValue) * eased);
-      setDisplayProgress(current);
-
-      if (progress < 1) {
-        rafRef.current = requestAnimationFrame(animate);
-      }
-    };
-
-    rafRef.current = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(rafRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [targetProgress]);
+  const displayProgress = useAnimatedCounter({
+    target: targetProgress,
+    duration: 500,
+  });
 
   return (
     <div className="flex items-center gap-3 mt-2 sm:mt-3">
@@ -65,11 +43,8 @@ function AnimatedProgress({
         aria-label={`Progreso del test: ${targetProgress}%`}
       >
         <div
-          className="h-full rounded-full transition-[width] duration-500 ease-out shadow-[0_0_6px_rgba(112,181,219,0.4)]"
-          style={{
-            width: `${targetProgress}%`,
-            background: "linear-gradient(to right, var(--color-celeste) 0%, rgba(255, 255, 255, 0.95) 31%, rgba(255, 255, 255, 0.95) 46.5%, var(--color-gold) 50%, rgba(255, 255, 255, 0.95) 53.5%, rgba(255, 255, 255, 0.95) 69%, var(--color-celeste) 100%)",
-          }}
+          className="h-full rounded-full bg-gradient-to-r from-celeste via-white/95 via-[31%] via-white/95 via-[46.5%] via-gold via-[50%] via-white/95 via-[53.5%] via-white/95 via-[69%] to-celeste transition-[width] duration-500 ease-out shadow-[0_0_6px_rgba(112,181,219,0.4)]"
+          style={{ width: `${targetProgress}%` }}
         />
       </div>
       <span className="min-w-[3ch] text-right text-xs font-semibold tabular-nums text-primary/45 sm:text-sm">
@@ -90,6 +65,7 @@ export default function TestNavbar({
   return (
     <header
       ref={ref}
+      data-test-navbar
       className="fixed left-0 right-0 top-0 z-50 bg-surface/92 backdrop-blur-[16px] backdrop-saturate-[1.2] shadow-[0_1px_0_rgba(10,41,64,0.04),0_2px_8px_rgba(10,41,64,0.04)] border-b border-primary/6"
       role="banner"
     >

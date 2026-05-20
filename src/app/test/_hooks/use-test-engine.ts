@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import type { Exercise, Difficulty } from "@/lib/types";
+import { clearResults } from "@/lib/storage";
 import { getExercisesGroupedByLevel, shuffleArray } from "../_lib";
 import type { AnswerRecord } from "../_lib/results-calculator";
 
@@ -11,6 +12,7 @@ export interface UseTestEngineReturn {
   exercises: Exercise[];
   levelIndex: number;
   exerciseIndexInLevel: number;
+  flatIndex: number;
   totalExercises: number;
   currentLevel: Difficulty;
   selectedOptionIndex: number | null;
@@ -19,7 +21,6 @@ export interface UseTestEngineReturn {
   isCompleted: boolean;
   exercise: Exercise | undefined;
   actionLabel: string;
-  flatIndex: number;
   answerHistory: AnswerRecord[];
   handleSelectOption: (index: number) => void;
   handleSetWordOrder: (words: string[]) => void;
@@ -27,13 +28,9 @@ export interface UseTestEngineReturn {
 }
 
 export function useTestEngine(): UseTestEngineReturn {
-  const [groupedExercises, setGroupedExercises] = useState<Exercise[][]>(
-    () => getExercisesGroupedByLevel(),
+  const [groupedExercises] = useState<Exercise[][]>(
+    () => getExercisesGroupedByLevel().map((group) => shuffleArray(group)),
   );
-
-  useEffect(() => {
-    setGroupedExercises((prev) => prev.map((group) => shuffleArray(group)));
-  }, []);
 
   const allExercises = useMemo(
     () => groupedExercises.flat(),
@@ -46,10 +43,10 @@ export function useTestEngine(): UseTestEngineReturn {
   const [userWordOrder, setUserWordOrderState] = useState<string[]>([]);
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
-  const answerHistoryRef = useRef<AnswerRecord[]>([]);
+  const [answerHistory, setAnswerHistory] = useState<AnswerRecord[]>([]);
 
   useEffect(() => {
-    sessionStorage.removeItem("oid-mortales-test-results");
+    clearResults();
   }, []);
 
   const levelGroup = groupedExercises[levelIndex] ?? [];
@@ -73,14 +70,10 @@ export function useTestEngine(): UseTestEngineReturn {
     }
   }, [exercise, selectedOptionIndex, userWordOrder]);
 
-  const answerHistory: AnswerRecord[] = answerHistoryRef.current;
-
-  const flatIndex = Math.min(
+  const flatIndex =
     groupedExercises
       .slice(0, levelIndex)
-      .reduce((sum, g) => sum + g.length, 0) + exerciseIndexInLevel,
-    allExercises.length - 1,
-  );
+      .reduce((sum, g) => sum + g.length, 0) + exerciseIndexInLevel;
 
   const totalExercises = allExercises.length;
 
@@ -106,7 +99,7 @@ export function useTestEngine(): UseTestEngineReturn {
     [isAnswered],
   );
 
-  const canVerify = (): boolean => {
+  const canVerify = useCallback((): boolean => {
     if (!exercise) return false;
     switch (exercise.type) {
       case "multiple-choice":
@@ -114,22 +107,23 @@ export function useTestEngine(): UseTestEngineReturn {
       case "question-answer":
         return selectedOptionIndex !== null;
       case "word-order":
-        return (
-          userWordOrder.length === exercise.shuffledWords.length
-        );
+        return userWordOrder.length === exercise.shuffledWords.length;
     }
-  };
+  }, [exercise, selectedOptionIndex, userWordOrder]);
 
   const handleAction = useCallback(() => {
     if (!isAnswered) {
       if (!canVerify() || !exercise) return;
-      answerHistoryRef.current.push({
-        exerciseId: exercise.id,
-        difficulty: exercise.difficulty,
-        type: exercise.type,
-        grammarTopic: exercise.grammarTopic,
-        correct: isAnswerCorrect(),
-      });
+      setAnswerHistory((prev) => [
+        ...prev,
+        {
+          exerciseId: exercise.id,
+          difficulty: exercise.difficulty,
+          type: exercise.type,
+          grammarTopic: exercise.grammarTopic,
+          correct: isAnswerCorrect(),
+        },
+      ]);
       setIsAnswered(true);
       return;
     }
@@ -143,12 +137,10 @@ export function useTestEngine(): UseTestEngineReturn {
     }
 
     if (isLastInLevel) {
-      setLevelIndex((prev) => Math.min(prev + 1, groupedExercises.length - 1));
+      setLevelIndex((prev) => prev + 1);
       setExerciseIndexInLevel(0);
     } else {
-      setExerciseIndexInLevel((prev) =>
-        Math.min(prev + 1, levelGroup.length - 1),
-      );
+      setExerciseIndexInLevel((prev) => prev + 1);
     }
 
     setSelectedOptionIndex(null);
@@ -169,6 +161,7 @@ export function useTestEngine(): UseTestEngineReturn {
     exercises: allExercises,
     levelIndex,
     exerciseIndexInLevel,
+    flatIndex,
     totalExercises,
     currentLevel,
     selectedOptionIndex,
@@ -177,7 +170,6 @@ export function useTestEngine(): UseTestEngineReturn {
     isCompleted,
     exercise,
     actionLabel,
-    flatIndex,
     handleSelectOption,
     handleSetWordOrder,
     handleAction,

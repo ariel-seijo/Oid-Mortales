@@ -24,3 +24,10 @@ export const METHODOLOGY_CARDS = [
     icon: "academic",
   },
 ] as const;
+
+export const SESSION_KEY = "oid-mortales-test-results";
+
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://oid-mortales.vercel.app";
+
+export const COMPARISON_INTERVAL_MS = 5000;

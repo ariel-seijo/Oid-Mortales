@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Literata, Inter } from "next/font/google";
+import { SITE_URL } from "@/lib/constants";
+import JsonLd from "@/components/json-ld";
 import "./globals.css";
 
 const literata = Literata({
@@ -20,7 +22,21 @@ export const metadata: Metadata = {
   title: "Oíd Mortales | Plataforma de Nivelación de Inglés",
   description:
     "Transforma tu pasión en dominio del inglés. Una metodología innovadora que conecta tus intereses personales con el aprendizaje estructurado del idioma.",
-  metadataBase: new URL("https://oid-mortales.vercel.app"),
+  metadataBase: new URL(SITE_URL),
+  keywords: [
+    "inglés",
+    "nivelación",
+    "test de inglés",
+    "MCER",
+    "historia argentina",
+    "Belgrano",
+    "Revolución de Mayo",
+    "aprender inglés",
+    "nivel de inglés",
+    "two4one",
+  ],
+  creator: "Oíd Mortales",
+  publisher: "Oíd Mortales",
   alternates: {
     canonical: "/",
   },
@@ -69,24 +85,7 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "Oíd Mortales",
-              url: "https://oid-mortales.vercel.app",
-              description:
-                "Plataforma de nivelación de inglés que conecta tus intereses personales con el aprendizaje estructurado del idioma.",
-              inLanguage: "es",
-              publisher: {
-                "@type": "Organization",
-                name: "Oíd Mortales",
-              },
-            }),
-          }}
-        />
+        <JsonLd />
       </head>
       <body className="min-h-full flex flex-col font-sans">
         <a href="#main-content" className="absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0 focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:w-auto focus:h-auto focus:px-4 focus:py-2 focus:m-0 focus:overflow-visible focus:whitespace-normal focus:rounded-lg focus:bg-celeste focus:text-sm focus:font-semibold focus:text-surface focus:no-underline">

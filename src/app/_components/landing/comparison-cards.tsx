@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { COMPARISON_INTERVAL_MS } from "@/lib/constants";
 
 type ComparisonPair = {
   boring: { before: string; verb: string; after: string };
@@ -46,8 +47,6 @@ const COMPARISONS: ComparisonPair[] = [
   },
 ];
 
-const INTERVAL_MS = 5000;
-
 export default function ComparisonCards() {
   const [active, setActive] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -63,7 +62,7 @@ export default function ComparisonCards() {
 
   const startTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(advance, INTERVAL_MS);
+    timerRef.current = setInterval(advance, COMPARISON_INTERVAL_MS);
   }, [advance]);
 
   const stopTimer = useCallback(() => {

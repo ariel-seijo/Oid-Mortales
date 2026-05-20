@@ -1,66 +1,47 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
+import { loadResults } from "@/lib/storage";
+import { useNavbarHeight } from "@/hooks/use-navbar-height";
+import { PrimaryCTA } from "@/components/ui/primary-cta";
 import { calculateResults } from "../../_lib/results-calculator";
-import type { AnswerRecord, TestResults } from "../../_lib/results-calculator";
+import type { TestResults } from "../../_lib/results-calculator";
 import { MOCK_ANSWERS } from "../_lib/mock-results";
 import ScoreHero from "./score-hero";
 import LevelDescription from "./level-description";
 import CTASection from "./cta-section";
 
-const SESSION_KEY = "oid-mortales-test-results";
+function useResultsData() {
+  const [state] = useState<{
+    results: TestResults | null;
+    error: boolean;
+    isMockData: boolean;
+  }>(() => {
+    const stored = loadResults();
+    if (stored && stored.answers.length > 0) {
+      return {
+        results: calculateResults(stored.answers),
+        error: false,
+        isMockData: false,
+      };
+    }
+    if (process.env.NODE_ENV === "development") {
+      return {
+        results: calculateResults(MOCK_ANSWERS),
+        error: false,
+        isMockData: true,
+      };
+    }
+    return { results: null, error: true, isMockData: false };
+  });
 
-function getStoredData(): { answers: AnswerRecord[] } | null {
-  try {
-    const raw = sessionStorage.getItem(SESSION_KEY);
-    if (!raw) return null;
-    const data = JSON.parse(raw);
-    if (!Array.isArray(data.answers)) return null;
-    return { answers: data.answers };
-  } catch {
-    return null;
-  }
+  return state;
 }
 
 export default function ResultsContent() {
-  const [results, setResults] = useState<TestResults | null>(null);
-  const [error, setError] = useState(false);
-  const [isMockData, setIsMockData] = useState(false);
-  const [navbarHeight, setNavbarHeight] = useState(0);
-  const observerRef = useRef<ResizeObserver | null>(null);
-
-  useEffect(() => {
-    const stored = getStoredData();
-    if (!stored || stored.answers.length === 0) {
-      if (process.env.NODE_ENV === "development") {
-        setResults(calculateResults(MOCK_ANSWERS));
-        setIsMockData(true);
-      } else {
-        setError(true);
-      }
-      return;
-    }
-    setResults(calculateResults(stored.answers));
-  }, []);
-
-  useEffect(() => {
-    if (!results) return;
-
-    const el = document.querySelector("[data-results-navbar]");
-    if (el instanceof HTMLElement) {
-      observerRef.current = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          setNavbarHeight(entry.target.getBoundingClientRect().height);
-        }
-      });
-      observerRef.current.observe(el);
-      setNavbarHeight(el.getBoundingClientRect().height);
-    }
-
-    return () => observerRef.current?.disconnect();
-  }, [results]);
+  const { results, error, isMockData } = useResultsData();
+  const navbarHeight = useNavbarHeight("[data-results-navbar]");
 
   if (error) {
     return (
@@ -74,7 +55,7 @@ export default function ResultsContent() {
       >
         <div className="mx-auto max-w-[28rem] rounded-[1.25rem] border border-primary/6 bg-gradient-to-b from-surface-card via-surface-alt/20 to-[#f8fafc] p-8 text-center shadow-[0_4px_16px_rgba(10,41,64,0.07),0_1px_3px_rgba(10,41,64,0.04)] sm:p-10">
           <svg
-            className="h-12 w-12 block mx-auto mb-4 text-primary/45"
+            className="h-12 w-12 block mx-auto mb-4 text-primary/20"
             viewBox="0 0 24 24"
             fill="none"
             aria-hidden="true"
@@ -90,15 +71,12 @@ export default function ResultsContent() {
           <h2 className="font-serif text-xl font-bold text-text-dark sm:text-2xl">
             Sin resultados disponibles
           </h2>
-          <p className="mt-2 text-sm leading-[1.65] text-primary/65 sm:text-base">
+          <p className="mt-2 text-sm leading-[1.65] text-primary/50 sm:text-base">
             No se encontraron datos del test. Realizá un test para ver tus resultados.
           </p>
-          <Link
-            href="/"
-            className="mt-6 inline-flex h-12 items-center justify-center rounded-lg bg-gradient-to-br from-celeste to-primary-hover px-8 text-sm font-semibold text-surface no-underline transition-all duration-300 shadow-[0_2px_8px_rgba(112,181,219,0.2)] hover:from-primary-hover hover:to-primary hover:shadow-[0_6px_20px_rgba(30,97,138,0.2)] hover:-translate-y-px sm:h-14 sm:text-base"
-          >
+          <PrimaryCTA href="/" className="mt-6 sm:h-14 sm:text-base">
             Ir al inicio
-          </Link>
+          </PrimaryCTA>
         </div>
       </div>
     );
@@ -120,7 +98,7 @@ export default function ResultsContent() {
             transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
             className="w-10 h-10 rounded-full border-2 border-primary/12 border-t-celeste shadow-[0_0_8px_rgba(112,181,219,0.15)]"
           />
-          <p className="text-sm text-primary/60">Cargando resultados...</p>
+          <p className="text-sm text-primary/40">Cargando resultados...</p>
         </div>
       </div>
     );
@@ -147,7 +125,7 @@ export default function ResultsContent() {
                 </span>
               )}
             </span>
-            <span className="rounded-full bg-gradient-to-br from-primary/8 to-celeste/12 border border-primary/8 px-3 py-1 text-[0.6875rem] font-semibold text-primary/70 tracking-[0.02em] sm:text-xs">
+            <span className="rounded-full bg-gradient-to-br from-primary/6 to-celeste/8 border border-primary/6 px-3 py-1 text-[0.6875rem] font-semibold text-primary/55 tracking-[0.02em] sm:text-xs">
               Historia Argentina
             </span>
           </div>

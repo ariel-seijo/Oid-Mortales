@@ -1,6 +1,6 @@
 import ScrollReveal from "@/components/ui/scroll-reveal";
 import RotatingText from "@/components/ui/rotating-text";
-import Link from "next/link";
+import { PrimaryCTA, SecondaryCTA } from "@/components/ui/primary-cta";
 
 export default function HeroSection() {
   return (
@@ -40,20 +40,18 @@ export default function HeroSection() {
 
         <ScrollReveal delay={0.35}>
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <Link
+            <PrimaryCTA
               href="/test"
-              className="inline-flex items-center justify-center h-12 w-full rounded-lg bg-gradient-to-r from-[#0085cc] to-[#40aae4] px-7 text-sm font-semibold text-surface no-underline transition-all duration-300 hover:from-[#0271ad] hover:to-[#358ab8] hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)] sm:w-auto"
-              aria-label="Comenzar test de nivelación"
+              ariaLabel="Comenzar test de nivelación"
             >
               Comenzar test
-            </Link>
-            <a
+            </PrimaryCTA>
+            <SecondaryCTA
               href="#metodologia"
-              className="inline-flex items-center justify-center h-12 w-full rounded-lg border border-primary/20 bg-transparent px-7 text-sm font-semibold text-primary no-underline transition-all duration-300 hover:border-primary/40 hover:bg-white sm:w-auto"
-              aria-label="Conocer metodología académica — ir a sección de metodología"
+              ariaLabel="Conocer metodología académica — ir a sección de metodología"
             >
               Conocer metodología
-            </a>
+            </SecondaryCTA>
           </div>
         </ScrollReveal>
       </div>

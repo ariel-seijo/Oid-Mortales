@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useAnimatedCounter } from "@/hooks/use-animated-counter";
 import type { TestResults } from "../../_lib/results-calculator";
 
 interface ScoreHeroProps {
@@ -54,7 +55,7 @@ function StatCard({
       <span className="font-serif text-2xl font-bold text-text-dark sm:text-3xl">
         {value}
       </span>
-      <span className="mt-0.5 text-[0.6875rem] font-medium uppercase tracking-[0.06em] text-primary/65 sm:text-xs">
+      <span className="mt-0.5 text-[0.6875rem] font-medium uppercase tracking-[0.06em] text-primary/40 sm:text-xs">
         {label}
       </span>
     </motion.div>
@@ -62,29 +63,16 @@ function StatCard({
 }
 
 export default function ScoreHero({ results }: ScoreHeroProps) {
-  const [displayPercent, setDisplayPercent] = useState(0);
   const [animated, setAnimated] = useState(false);
+  const displayPercent = useAnimatedCounter({
+    target: results.overallPercentage,
+    duration: 1500,
+  });
 
   useEffect(() => {
-    setAnimated(true);
-    const target = results.overallPercentage;
-    let frame: number;
-    const start = performance.now();
-    const duration = 1500;
-
-    const animate = (now: number) => {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplayPercent(Math.round(eased * target));
-      if (progress < 1) {
-        frame = requestAnimationFrame(animate);
-      }
-    };
-
-    frame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(frame);
-  }, [results.overallPercentage]);
+    const timer = setTimeout(() => setAnimated(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <section className="mb-10 sm:mb-14">
@@ -153,7 +141,7 @@ export default function ScoreHero({ results }: ScoreHeroProps) {
               y={130}
               textAnchor="middle"
               dominantBaseline="central"
-              className="fill-primary/60 font-sans text-xs font-medium tracking-[0.04em] uppercase sm:text-sm"
+              className="fill-primary/35 font-sans text-xs font-medium tracking-[0.04em] uppercase sm:text-sm"
             >
               acierto
             </text>
@@ -167,12 +155,11 @@ export default function ScoreHero({ results }: ScoreHeroProps) {
               initial={animated ? { opacity: 0, x: -10 } : false}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.15 }}
-              className="text-xs font-semibold uppercase tracking-[0.12em] text-primary/60 sm:text-sm"
+              className="text-xs font-semibold uppercase tracking-[0.12em] text-primary/35 sm:text-sm"
             >
               Tu nivel estimado
             </motion.span>
             <LevelBadge level={results.cefrLevel.level} animated={animated} />
-
           </div>
 
           {/* Stats row */}

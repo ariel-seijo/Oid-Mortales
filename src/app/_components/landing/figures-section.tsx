@@ -1,4 +1,5 @@
 import ScrollReveal from "@/components/ui/scroll-reveal";
+import Image from "next/image";
 
 interface Figure {
   name: string;
@@ -37,10 +38,13 @@ export default function FiguresSection() {
                   {figure.name}
                 </p>
 
-                <img
-                  className="block w-[200px] h-auto object-contain sm:w-[220px]"
+                <Image
+                  className="object-contain"
                   src={figure.image}
                   alt={`Retrato de ${figure.name}`}
+                  width={220}
+                  height={320}
+                  sizes="(max-width: 640px) 200px, 220px"
                   loading="lazy"
                 />
 

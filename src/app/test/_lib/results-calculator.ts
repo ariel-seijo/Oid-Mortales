@@ -19,6 +19,7 @@ export interface CEFRLevelDetails {
 export interface CEFRResult {
   level: Difficulty;
   description: CEFRLevelDetails;
+  isExact: boolean;
 }
 
 export interface TestResults {
@@ -119,6 +120,7 @@ function determineLevelFromPoints(totalCorrect: number): CEFRResult {
   return {
     level,
     description: CEFR_DESCRIPTIONS[level],
+    isExact: true,
   };
 }
 

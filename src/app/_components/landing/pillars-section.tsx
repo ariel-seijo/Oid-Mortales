@@ -1,6 +1,17 @@
-import Link from "next/link";
+import dynamic from "next/dynamic";
 import ScrollReveal from "@/components/ui/scroll-reveal";
-import ComparisonCards from "./comparison-cards";
+import { PrimaryCTA } from "@/components/ui/primary-cta";
+
+const ComparisonCards = dynamic(
+  () => import("./comparison-cards"),
+  {
+    loading: () => (
+      <div className="mt-12 min-h-[360px] flex items-center justify-center">
+        <div className="h-8 w-8 rounded-full border-2 border-primary/12 border-t-celeste animate-spin" />
+      </div>
+    ),
+  },
+);
 
 export default function PillarsSection() {
   return (
@@ -22,12 +33,9 @@ export default function PillarsSection() {
         <ComparisonCards />
 
         <ScrollReveal delay={0.3} className="mt-10 text-center">
-          <Link
-            href="/test"
-            className="inline-flex items-center justify-center h-12 rounded-lg bg-gradient-to-r from-[#0085cc] to-[#40aae4] px-7 text-sm font-semibold text-surface no-underline transition-all duration-300 hover:from-[#0271ad] hover:to-[#358ab8] hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)] sm:h-14 sm:px-10 sm:text-base"
-          >
+          <PrimaryCTA href="/test">
             Comenzar test nivelatorio
-          </Link>
+          </PrimaryCTA>
         </ScrollReveal>
       </div>
     </section>

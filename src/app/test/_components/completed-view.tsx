@@ -3,13 +3,12 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { saveResults } from "@/lib/storage";
 import type { AnswerRecord } from "../_lib/results-calculator";
 
 interface CompletedViewProps {
   answerHistory: AnswerRecord[];
 }
-
-const SESSION_KEY = "oid-mortales-test-results";
 
 export default function CompletedView({
   answerHistory,
@@ -17,10 +16,7 @@ export default function CompletedView({
   const router = useRouter();
 
   useEffect(() => {
-    sessionStorage.setItem(
-      SESSION_KEY,
-      JSON.stringify({ answers: answerHistory }),
-    );
+    saveResults(answerHistory);
 
     const timeout = setTimeout(() => {
       router.push("/test/resultados");
